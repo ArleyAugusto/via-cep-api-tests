@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "667dc649-99bc-4d33-9d03-acaf5ce58f7b",
+		"name": "Testes ViaCEP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38493710",
+		"_collection_link": "https://www.postman.com/arley-qa/viacep/collection/2pqaqql/testes-viacep?action=share&source=collection_link&creator=38493710"
+	},
+	"item": [
+		{
+			"name": "Testes Positivos",
+			"item": [
+				{
+					"name": "Validar status code - 01001000",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code é 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}01001000{{Form}}",
+							"host": [
+								"{{Base_url}}01001000{{Form}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar o campo CEP - 01001000",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"CEP retornado está correto\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.cep).to.eql(\"01001-000\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "viacep.com.br/ws/01001000/json/",
+							"host": [
+								"viacep",
+								"com",
+								"br"
+							],
+							"path": [
+								"ws",
+								"01001000",
+								"json",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar se todos os campos estão presentes - 01001000",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Todos os campos estão presentes\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    const camposEsperados = [\"cep\", \"logradouro\", \"complemento\", \"bairro\", \"localidade\", \"uf\", \"ibge\", \"gia\", \"ddd\", \"siafi\"];\r",
+									"    \r",
+									"    camposEsperados.forEach(key => {\r",
+									"        pm.expect(jsonData).to.have.property(key);\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "viacep.com.br/ws/01001000/json/",
+							"host": [
+								"viacep",
+								"com",
+								"br"
+							],
+							"path": [
+								"ws",
+								"01001000",
+								"json",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar busca CEP com traço - 01001-000",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}01001-000{{Form}}",
+							"host": [
+								"{{Base_url}}01001-000{{Form}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar CEP de outro estado - 38412030",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Cidade corresponde ao CEP informado\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Uberlândia\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"DDD corresponde a busca\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"34\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}38412030{{Form}}",
+							"host": [
+								"{{Base_url}}38412030{{Form}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testes Negativos",
+			"item": [
+				{
+					"name": "Validar erro CEP com menos de 8 dígitos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"CEP com letras retorna erro\", function () {\r",
+									"    pm.response.to.have.status(400); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}384099{{Form}}",
+							"host": [
+								"{{Base_url}}384099{{Form}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar erro CEP com letras ou caracteres inválidos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"CEP com letras retorna erro\", function () {\r",
+									"    pm.response.to.have.status(400); \r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}a$384099{{Form}}",
+							"host": [
+								"{{Base_url}}a$384099{{Form}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar erro CEP inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Retorno possui erro true\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"erro\", \"true\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}88888888{{Form}}",
+							"host": [
+								"{{Base_url}}88888888{{Form}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testes automatizado - Validação",
+			"item": [
+				{
+					"name": "Validacão CEP válido - 01001000",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Teste 1: Verificar se o retorno é um objeto JSON\r",
+									"pm.test(\"A resposta é um objeto JSON\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"// Teste 2: Validar se o status code= 200\r",
+									"pm.test(\"Status code = 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Teste 3: Verificar se todos os campos obrigatórios estão presentes\r",
+									"pm.test(\"Todos os campos obrigatórios estão presentes\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var expectedKeys = [\"cep\", \"logradouro\", \"complemento\", \"bairro\", \"localidade\", \"uf\", \"ibge\", \"gia\", \"ddd\", \"siafi\"];\r",
+									"    expectedKeys.forEach(function(key) {\r",
+									"        pm.expect(jsonData).to.have.property(key);\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Teste 4: Validar os valores esperados para alguns campos específicos\r",
+									"pm.test(\"Dados do CEP são válidos\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.cep).to.eql(\"01001-000\");\r",
+									"    pm.expect(jsonData.logradouro).to.eql(\"Praça da Sé\");\r",
+									"    pm.expect(jsonData.uf).to.eql(\"SP\");\r",
+									"});\r",
+									"\r",
+									"// Teste 5: Verificar se a resposta não possui o campo \"erro\"\r",
+									"pm.test(\"A resposta não possui erro\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.not.have.property(\"erro\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Base_url}}01001000{{Form}}",
+							"host": [
+								"{{Base_url}}01001000{{Form}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
